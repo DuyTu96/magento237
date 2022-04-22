@@ -1,0 +1,56 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: dev
+        uid: 1000
+      context: ./
+      dockerfile: dockers/Dockerfile
+    image: magento2
+    container_name: magento2-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+      - ./dockers/php/php.ini:/usr/local/etc/php/conf.d/php.ini
+      - ./dockers/crontab:/etc/cron.d/ts-cron
+    networks:
+      - magento2_net
+
+  db:
+    image: mysql:5.7.16
+    container_name: magento2-db
+    restart: unless-stopped
+    command: mysqld --sql_mode=""
+    environment:
+      MYSQL_DATABASE: magento2
+      MYSQL_ROOT_PASSWORD: passw0rd
+      MYSQL_PASSWORD: passw0rd
+
+      MYSQL_USER: admin
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+        - ./dockers/mysql:/docker-entrypoint-initdb.d
+        - ./dockers/mysql/data:/var/lib/mysql
+    ports:
+      - 3333:3306
+    networks:
+      - magento2_net
+
+  nginx:
+    image: nginx:alpine
+    container_name: magento2-nginx
+    restart: unless-stopped
+    ports:
+      - 8888:80
+    volumes:
+      - ./:/var/www
+      - ./dockers/nginx:/etc/nginx/conf.d/
+    networks:
+      - magento2_net
+
+networks:
+  magento2_net:
+    driver: bridge

@@ -1,0 +1,8 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Training_Blog::blog_manager" title="Blog Manager" module="Training_Blog" sortOrder="12" resource="Training_Blog::blog_manager"/>
+        <add id="Training_Blog::list_blog" title="List Blog" module="Training_Blog" action="blog" resource="Training_Blog::blog_manager" parent="Training_Blog::blog_manager"/>
+        <add id="Training_Blog::new_blog" title="New Blog" module="Training_Blog" action="blog/index/new" resource="Training_Blog::save" parent="Training_Blog::blog_manager"/>
+        <add id="Training_Blog::categories" title="Categories" module="Training_Blog" action="blog/category/index" resource="Training_Blog::categories" parent="Training_Blog::blog_manager"/>
+    </menu>
+</config>

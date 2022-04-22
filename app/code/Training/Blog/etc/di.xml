@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Training\Blog\Api\BlogRepositoryInterface" type="Training\Blog\Model\Repository\BlogRepository"/>
+    <preference for="Training\Blog\Api\Data\BlogInterface" type="Training\Blog\Model\Data\Blog"/>
+    <preference for="Training\Blog\Api\Data\BlogSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+
+    <preference for="Training\Blog\Api\CategoryRepositoryInterface" type="Training\Blog\Model\Repository\CategoryRepository"/>
+    <preference for="Training\Blog\Api\TagRepositoryInterface" type="Training\Blog\Model\Repository\TagRepository"/>
+
+    <!--  Upload Image  -->
+    <type name="Training\Blog\Controller\Adminhtml\Index\Image\Upload">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">Training\Blog\BlogImageUpload</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Training\Blog\BlogImageUpload" type="Magento\Catalog\Model\ImageUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">blog/tmp/images</argument>
+            <argument name="basePath" xsi:type="string">blog/images</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="gif" xsi:type="string">gif</item>
+                <item name="png" xsi:type="string">png</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!--    Upload Multiple-->
+    <type name="Training\Blog\Controller\Adminhtml\Index\Image\UploadMultiple">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">Training\Blog\BlogImageUploadMultiple</argument>
+        </arguments>
+    </type>
+    <virtualType name="Training\Blog\BlogImageUploadMultiple" type="Magento\Catalog\Model\ImageUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">blog/tmp/images</argument>
+            <argument name="basePath" xsi:type="string">blog/images</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="gif" xsi:type="string">gif</item>
+                <item name="png" xsi:type="string">png</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!--  Blog  -->
+   <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+       <arguments>
+           <argument name="collections" xsi:type="array">
+               <item name="blog_listing_data_source" xsi:type="string">Training\Blog\Model\ResourceModel\Blog\Grid\Collection</item>
+           </argument>
+       </arguments>
+   </type>
+
+   <virtualType name="Training\Blog\Model\ResourceModel\Blog\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+       <arguments>
+           <argument name="mainTable" xsi:type="string">blogs</argument>
+           <argument name="resourceModel" xsi:type="string">Training\Blog\Model\ResourceModel\Blog</argument>
+       </arguments>
+   </virtualType>
+
+
+<!--    <type name="Training\Blog\Model\ResourceModel\Blog\Grid\Collection">-->
+<!--        <arguments>-->
+<!--            <argument name="mainTable" xsi:type="string">blogs</argument>-->
+<!--            <argument name="eventPrefix" xsi:type="string">blogs_grid_collection</argument>-->
+<!--            <argument name="eventObject" xsi:type="string">blogs_collection</argument>-->
+<!--            <argument name="resourceModel" xsi:type="string">Training\Blog\Model\ResourceModel\Blog</argument>-->
+<!--        </arguments>-->
+<!--    </type>-->
+<!--    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">-->
+<!--        <arguments>-->
+<!--            <argument name="collections" xsi:type="array">-->
+<!--                <item name="grid_record_grid_list_data_source" xsi:type="string">Training\Blog\Model\ResourceModel\Blog\Grid\Collection</item>-->
+<!--            </argument>-->
+<!--        </arguments>-->
+<!--    </type>-->
+
+    <!-- <type name="Training\Blog\Model\ResourceModel\Blog\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">blogs</argument>
+            <argument name="eventPrefix" xsi:type="string">blog_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">blog_grid_records_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Training\Blog\Model\ResourceModel\Blog</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="blog_listing_data_source" xsi:type="string">Training\Blog\Model\ResourceModel\Blog\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type> -->
+
+
+    <!--    Category -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="category_listing_data_source" xsi:type="string">Training\Blog\Model\ResourceModel\Category\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Training\Blog\Model\ResourceModel\Category\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">categories</argument>
+            <argument name="resourceModel" xsi:type="string">Training\Blog\Model\ResourceModel\Category</argument>
+        </arguments>
+    </virtualType>
+
+
+    <!--    Tag -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="tag_listing_data_source" xsi:type="string">Training\Blog\Model\ResourceModel\Tag\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Training\Blog\Model\ResourceModel\Tag\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">tags</argument>
+            <argument name="resourceModel" xsi:type="string">Training\Blog\Model\ResourceModel\Tag</argument>
+        </arguments>
+    </virtualType>
+
+    <!--  BlogFilter  -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+        <arguments>
+            <argument name="appliers" xsi:type="array">
+                <item name="categories" xsi:type="object">Training\Blog\UiComponent\DataProvider\LikeFilter</item>
+            </argument>
+        </arguments>
+    </type>
+
+<!--    <type name="Magento\Catalog\Ui\DataProvider\Product\ProductDataProvider">-->
+<!--        <arguments>-->
+<!--            <argument name="addFilterStrategies" xsi:type="array">-->
+<!--                <item name="fulltext" xsi:type="object">Magento\CatalogSearch\Ui\DataProvider\Product\AddFulltextFilterToCollection</item>-->
+<!--            </argument>-->
+<!--        </arguments>-->
+<!--    </type>-->
+</config>

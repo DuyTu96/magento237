@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Blog</title>
+        <link rel="stylesheet" src="Training_Blog::css/owl.carousel.min.css"/>
+        <link rel="stylesheet" src="Training_Blog::css/owl.theme.default.min.css"/>
+
+        <script src="Training_Blog::js/jquery.min.js"/>
+        <script src="Training_Blog::js/owl.carousel.min.js"/>
+    </head>
+    <referenceContainer name="content">
+        <block class="Training\Blog\Block\Detail" name="blog_detail_index" template="Training_Blog::detail.phtml" />
+    </referenceContainer>
+</page>

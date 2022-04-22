@@ -1,0 +1,299 @@
+<?php
+/**
+ * @var Index $block
+ */
+
+use Training\Blog\Block\Index;
+
+$category_id = $this->getRequest()->getParam('category_id');
+$page = $this->getRequest()->getParam('page');
+$keyword = $this->getRequest()->getParam('keyword');
+$perPage = $this->getRequest()->getParam('per_page') ?? 5;
+$maxPage = $block->getPage($category_id, $keyword, (int) $perPage);
+?>
+<style>
+    a {
+        text-decoration: none;
+        color: #000;
+    }
+    a:hover {
+        text-decoration: none;
+    }
+    p {
+        color: #777;
+    }
+    .container {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+    }
+    /*left component*/
+    .container .left-container {
+        min-height: 100vh;
+        width: 30%;
+    }
+    .container .left-container .category-item {
+        width: 100%;
+        height: 28px;
+        background: #006bb4;
+        margin-bottom: 2px;
+        padding-left: 15px;
+    }
+    .container .left-container .category-item p {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        color: #fff
+    }
+    /*right container*/
+    .container .right-container {
+        min-height: 100vh;
+        width: 100%;
+        padding-left: 40px;
+    }
+    .container .right-container .list-blog .blog-item {
+        background: #eeeeee;
+        width: 100%;
+        height: 250px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        padding: 15px;
+        display: flex;
+    }
+    .container .right-container .list-blog .blog-item .left-item {
+        width: 40%;
+        height: 100%;
+        border-radius: 5px;
+        padding-right: 15px;
+    }
+    .container .right-container .list-blog .blog-item .left-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+    .container .right-container .list-blog .blog-item .right-item {
+        padding: 20px;
+        width: 60%;
+        position: relative;
+    }
+    .container .right-container .list-blog .blog-item .right-item h2 {
+        color: #0fa7ff;
+        font-weight: bold;
+    }
+    .container .right-container .list-blog .blog-item .right-item .created-at {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+
+    /*  pagination  */
+    .container .right-container .pagination {
+        display: flex;
+        flex-direction: row;
+    }
+    .container .right-container .pagination .previous,
+    .container .right-container .pagination .page-item,
+    .container .right-container .pagination .next {
+        background: #006bb4;
+        height: 28px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        padding-left: 5px;
+        padding-right: 5px;
+        color: white;
+        border-radius: 5px;
+        margin-right: 3px;
+        min-width: 28px;
+    }
+
+    /*  header page  */
+    .header-page {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 15px;
+    }
+    .header-page .search-component {
+        width: 350px;
+        height: 28px;
+        display: flex;
+        flex-direction: row;
+    }
+    .header-page .search-component #per_page {
+        width: 75px;
+    }
+    .header-page .search-component input {
+        width: 100%;
+        height: 100%;
+    }
+    .header-page .search-component .search {
+        background: #eeeeee;
+        height: 100%;
+        align-items: center;
+        align-content: center;
+        display: flex;
+        margin-left: 10px;
+        border-radius: 5px;
+        padding: 2px 5px;
+        border: 1px solid gray;
+    }
+    .d-none {
+        display: none;
+    }
+    .page-active {
+        background: #0fa7ff !important;
+    }
+</style>
+<?php
+    echo '<input class="d-none" id="category_id" value="' . $category_id . '" />';
+    echo '<input class="d-none" id="page" value="' . $page . '" />';
+    echo '<input class="d-none" id="keywordOld" value="' . $keyword . '" />';
+    echo '<input class="d-none" id="perPage" value="' . $perPage . '" />';
+?>
+<div class="header-page">
+    <div class="search-component">
+        <label></label>
+        <select id="per_page">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+        </select>
+        <label for="keyword"></label>
+        <input placeholder="Search" id="keyword"/>
+        <div id="btn-search" class="search">
+            Search
+        </div>
+    </div>
+</div>
+<div class="container"">
+    <div class="left-container">
+        <?php
+            foreach ($block->getCategories() as $key => $category) {
+                echo '
+                    <a href="/blog?category_id=' . $category['value'] . '">
+                        <div class="category-item" style="margin-left: ' . $category['level'] * 15 . 'px; width: calc(100% - ' . $category['level'] * 15 . 'px);">
+                            <p>' . $category['label'] . '</p>
+                        </div>
+                    </a>
+                ';
+            }
+        ?>
+    </div>
+    <div class="right-container">
+        <div class="list-blog">
+            <?php
+                foreach ($block->getBlogCollection($category_id, $page, $keyword, $perPage) as $key => $blog) {
+                    echo '
+                           <div class="blog-item">
+                                <div class="left-item">
+                                    <a href="/blog/detail/index/blog_id/' . $blog['blog_id'] . '">
+                                        <img src="/media/blog/images/' . $blog["thumbnail"] . '">
+                                    </a>
+                                </div>
+                                <div class="right-item">
+                                    <a href="/blog/detail/index/blog_id/' . $blog['blog_id'] . '">
+                                        <h2> ' . $blog["name"] . ' </h2>
+                                    </a>
+                                    <hr>
+                                    <p class="short-description">' . $blog["short_description"] . '</p>
+                                    <div class="created-at">
+                                        <p>' . $blog["created_at"] . ' </p>
+                                    </div>
+                                </div>
+                           </div>
+                    ';
+                }
+            ?>
+        </div>
+        <div class="pagination">
+            <?php
+                if ($maxPage) {
+                    $pagePrevious = (int) $page > 1 ? (int) $page - 1 : 1;
+                    $previous = $block->getLink($category_id, $pagePrevious, $keyword, $perPage);
+
+                    echo '<a href="' . $previous . '"><div class="previous"><<</div></a>';
+
+                    for ($i = 1; $i <= $maxPage; $i++) {
+                        $link = $block->getLink($category_id, $i, $keyword, $perPage);
+                        echo '
+                            <a href="' . $link . '">
+                                <div class="page-item ' . ((int) $page == $i ? 'page-active' : '') . '">' . $i . '</div>
+                            </a>
+                        ';
+                    }
+
+                    $pageNext = (int) $page < $maxPage ? (int) $page + 1 : $maxPage;
+                    $next = $block->getLink($category_id, $pageNext, $keyword, $perPage);
+
+                    echo '<a href="' . $next . '"><div class="next">>></div></a>';
+                }
+            ?>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('load', (event) => {
+        pageLoaded()
+    });
+
+    const searchBtn = document.getElementById('btn-search')
+    const selectPerPage = document.getElementById('per_page')
+
+    function pageLoaded() {
+        console.log(123123)
+        const keywordOld = document.getElementById('keywordOld')
+        const keyword = document.getElementById('keyword')
+
+        keyword.value = keywordOld.value
+
+        const perPage = document.getElementById('perPage')
+        const per_page = document.getElementById('per_page')
+
+        console.log(perPage.value)
+        if (perPage.value) {
+            per_page.value = perPage.value
+        }
+    }
+    function onClickSearchBtn() {
+        const category_id = document.getElementById('category_id').value
+        const page = document.getElementById('page').value
+        const keyword = document.getElementById('keyword').value
+        const perPage = document.getElementById('perPage').value
+
+        let link = ''
+
+        if (category_id) link = link + `&category_id=${category_id}`
+        if (page) link = link + `&page=${page}`
+        if (keyword) link = link + `&keyword=${keyword}`
+        if (perPage) link = link + `&per_page=${perPage}`
+
+        link = link.substring(1);
+        link = `/blog?${link}`
+
+        window.location.href = link
+    }
+    function onChangePerPage() {
+        const category_id = document.getElementById('category_id').value
+        const page = document.getElementById('page').value
+        const keyword = document.getElementById('keyword').value
+        const perPage = document.getElementById('per_page').value
+
+        let link = ''
+
+        if (category_id) link = link + `&category_id=${category_id}`
+        if (page) link = link + `&page=${page}`
+        if (keyword) link = link + `&keyword=${keyword}`
+        if (perPage) link = link + `&per_page=${perPage}`
+
+        link = link.substring(1);
+        link = `/blog?${link}`
+
+        window.location.href = link
+    }
+
+    searchBtn.addEventListener("click", onClickSearchBtn)
+    selectPerPage.addEventListener("change", onChangePerPage)
+</script>
